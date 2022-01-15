@@ -46,19 +46,22 @@ namespace P3AddNewFunctionalityDotNetCore.Controllers
             // product property that is not conform to its business rules. The return type of the method 
             // must be of List<string>.
 
+            //GP: to do that we just call the CheckProductModelErrors() method that already exists in ProductService
+            modelErrors = _productService.CheckProductModelErrors(product);
+            //GP: When creating the product, we check all the fields. If there is a field validation error, we create an error message and add it to the list
             foreach (string error in modelErrors)
             {
-                ModelState.AddModelError("", error);
+                ModelState.AddModelError("", error);        //GP: we add our error message into the "Dictionnary" and give it a key
             }
 
-            if (ModelState.IsValid)
+            if (ModelState.IsValid)                         //GP: if we didn't add an error message to the "Dictionnary", the model state is valid => we save the product and go to the "Admin" page
             {
                 _productService.SaveProduct(product);
                 return RedirectToAction("Admin");
             }
             else
             {
-                return View(product);
+                return View(product);                       //GP: else, we stay on the product page
             }
         }
 
