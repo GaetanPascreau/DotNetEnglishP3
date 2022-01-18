@@ -91,5 +91,35 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             // Assert
             Assert.Contains("Please enter a price", modelErrors);
         }
+
+        [Fact]
+        public void CheckFieldValidationWithPriceNotANumber()
+        {
+            // Arrange
+            // Mock all interfaces that are used in ProductService
+            Mock<ICart> mockCart = new Mock<ICart>();
+            Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
+            Mock<IOrderRepository> mockOrderRepository = new Mock<IOrderRepository>();
+            Mock<IStringLocalizer<ProductService>> mockStringLocalizer = new Mock<IStringLocalizer<ProductService>>();
+
+            var errorName = new LocalizedString("PriceNotANumber", "The price must be a decimal value");
+            mockStringLocalizer.Setup(ml => ml["PriceNotANumber"]).Returns(errorName);
+            ProductService productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrderRepository.Object, mockStringLocalizer.Object);
+            ProductViewModel product = new ProductViewModel
+            {
+                Id = 1,
+                Stock = "1",
+                Price = "a",
+                Name = "z",
+                Description = "x",
+                Details = "y"
+            };
+
+            // Act
+            var modelErrors = productService.CheckProductModelErrors(product);
+
+            // Assert
+            Assert.Contains("The price must be a decimal value", modelErrors);
+        }
     }
 }
