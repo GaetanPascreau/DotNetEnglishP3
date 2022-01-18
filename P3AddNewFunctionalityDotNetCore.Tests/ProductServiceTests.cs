@@ -121,5 +121,35 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             // Assert
             Assert.Contains("The price must be a decimal value", modelErrors);
         }
+
+        [Fact]
+        public void CheckFieldValidationWithPriceNotGreaterThanZero()
+        {
+            // Arrange
+            // Mock all interfaces that are used in ProductService
+            Mock<ICart> mockCart = new Mock<ICart>();
+            Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
+            Mock<IOrderRepository> mockOrderRepository = new Mock<IOrderRepository>();
+            Mock<IStringLocalizer<ProductService>> mockStringLocalizer = new Mock<IStringLocalizer<ProductService>>();
+
+            var errorName = new LocalizedString("PriceNotGreaterThanZero", "The price must be greater than zero");
+            mockStringLocalizer.Setup(ml => ml["PriceNotGreaterThanZero"]).Returns(errorName);
+            ProductService productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrderRepository.Object, mockStringLocalizer.Object);
+            ProductViewModel product = new ProductViewModel
+            {
+                Id = 1,
+                Stock = "1",
+                Price = "-1",
+                Name = "z",
+                Description = "x",
+                Details = "y"
+            };
+
+            // Act
+            var modelErrors = productService.CheckProductModelErrors(product);
+
+            // Assert
+            Assert.Contains("The price must be greater than zero", modelErrors);
+        }
     }
 }
