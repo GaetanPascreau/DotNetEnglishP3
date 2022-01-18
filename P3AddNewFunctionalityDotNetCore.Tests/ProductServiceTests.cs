@@ -1,4 +1,10 @@
-﻿using Xunit;
+﻿using Microsoft.Extensions.Localization;
+using Moq;
+using P3AddNewFunctionalityDotNetCore.Models;
+using P3AddNewFunctionalityDotNetCore.Models.Repositories;
+using P3AddNewFunctionalityDotNetCore.Models.Services;
+using P3AddNewFunctionalityDotNetCore.Models.ViewModels;
+using Xunit;
 
 namespace P3AddNewFunctionalityDotNetCore.Tests
 {
@@ -22,5 +28,38 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
         }
 
         // TODO write test methods to ensure a correct coverage of all possibilities
+
+        [Fact]
+        public void CheckFieldValidationWithMissingName()
+        {
+            // Arrange
+            //we need to implement a new ProductService to be able to use the CheckProductModelErrors() method :
+            //ProductService(ICart cart, IProductRepository productRepository, IOrderRepository orderRepository, IStringLocalizer stringLocalizer)
+            // Mock all interfaces that are used in ProductService
+            Mock<ICart> mockCart = new Mock<ICart>();
+            Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
+            Mock<IOrderRepository> mockOrderRepository = new Mock<IOrderRepository>();
+            Mock<IStringLocalizer<ProductService>> mockStringLocalizer = new Mock<IStringLocalizer<ProductService>>();
+            //Mock<IProductService> mockProductService = new Mock<IProductService>();
+
+            var errorName = new LocalizedString("MissingName", "Please enter a name");
+            mockStringLocalizer.Setup(ml => ml["MissingName"]).Returns(errorName);
+            ProductService productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrderRepository.Object, mockStringLocalizer.Object);
+            ProductViewModel product = new ProductViewModel
+            {
+                Id = 1,
+                Stock = "1",
+                Price = "1",
+                Name = null,
+                Description = "x",
+                Details = "y"
+            };
+
+            // Act
+            var modelErrors = productService.CheckProductModelErrors(product);
+
+            // Assert
+            Assert.Contains("Please enter a name", modelErrors);
+        }
     }
 }
