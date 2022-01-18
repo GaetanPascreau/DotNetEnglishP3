@@ -61,5 +61,35 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             // Assert
             Assert.Contains("Please enter a name", modelErrors);
         }
+
+        [Fact]
+        public void CheckFieldValidationWithMissingPrice()
+        {
+            // Arrange
+            // Mock all interfaces that are used in ProductService
+            Mock<ICart> mockCart = new Mock<ICart>();
+            Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
+            Mock<IOrderRepository> mockOrderRepository = new Mock<IOrderRepository>();
+            Mock<IStringLocalizer<ProductService>> mockStringLocalizer = new Mock<IStringLocalizer<ProductService>>();
+
+            var errorName = new LocalizedString("MissingPrice", "Please enter a price");
+            mockStringLocalizer.Setup(ml => ml["MissingPrice"]).Returns(errorName);
+            ProductService productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrderRepository.Object, mockStringLocalizer.Object);
+            ProductViewModel product = new ProductViewModel
+            {
+                Id = 1,
+                Stock = "1",
+                Price = null,
+                Name = "z",
+                Description = "x",
+                Details = "y"
+            };
+
+            // Act
+            var modelErrors = productService.CheckProductModelErrors(product);
+
+            // Assert
+            Assert.Contains("Please enter a price", modelErrors);
+        }
     }
 }
