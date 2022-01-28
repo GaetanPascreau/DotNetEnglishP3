@@ -118,10 +118,13 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ErrorMissingName" xml:space="preserve">
-    <value>Veuillez saisir un nom</value>
+    <value>Veuillez saisir un nom de produit</value>
   </data>
   <data name="ErrorMissingPrice" xml:space="preserve">
     <value>Veuillez saisir un prix</value>
+  </data>
+  <data name="ErrorMissingQuantity" xml:space="preserve">
+    <value>Veuillez saisir une quantité</value>
   </data>
   <data name="ErrorMissingStock" xml:space="preserve">
     <value>Veuillez saisir un stock</value>

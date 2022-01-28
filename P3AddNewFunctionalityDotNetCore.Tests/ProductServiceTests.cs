@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Localization;
 using Moq;
+using P3AddNewFunctionalityDotNetCore.Controllers;
 using P3AddNewFunctionalityDotNetCore.Models;
 using P3AddNewFunctionalityDotNetCore.Models.Repositories;
 using P3AddNewFunctionalityDotNetCore.Models.Services;
@@ -222,7 +223,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             Mock<IOrderRepository> mockOrderRepository = new Mock<IOrderRepository>();
             Mock<IStringLocalizer<ProductService>> mockStringLocalizer = new Mock<IStringLocalizer<ProductService>>();
 
-            var errorName = new LocalizedString("StockNotGreaterThanZero", "Quantity must be an greater tah zero");
+            var errorName = new LocalizedString("StockNotGreaterThanZero", "Quantity must be greater than zero");
             mockStringLocalizer.Setup(ml => ml["StockNotGreaterThanZero"]).Returns(errorName);
             ProductService productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrderRepository.Object, mockStringLocalizer.Object);
             ProductViewModel product = new ProductViewModel
@@ -239,7 +240,7 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             var modelErrors = productService.CheckProductModelErrors(product);
 
             // Assert
-            Assert.Contains("Quantity must be an greater tah zero", modelErrors);
+            Assert.Contains("Quantity must be greater than zero", modelErrors);
         }
     }
 }
