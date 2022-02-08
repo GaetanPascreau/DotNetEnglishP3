@@ -93,7 +93,9 @@ namespace P3AddNewFunctionalityDotNetCore.Models.Services
         // TODO this is an example method, remove it and perform model validation using data annotations
         public List<string> CheckProductModelErrors(ProductViewModel product)
         {
+            //create a list that will save the error message if the field validation fails
             List<string> modelErrors = new List<string>();
+
             if (product.Name == null || string.IsNullOrWhiteSpace(product.Name))
             {
                 modelErrors.Add(_localizer["MissingName"]);

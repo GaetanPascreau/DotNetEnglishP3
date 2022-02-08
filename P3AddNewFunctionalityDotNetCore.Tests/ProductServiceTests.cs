@@ -16,24 +16,13 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
         /// A test method must check if a definite method does its job:
         /// returns an expected value from a particular set of parameters
         /// </summary>
-        [Fact]
-        public void ExampleMethod()
-        {
-            // Arrange
-
-            // Act
-
-
-            // Assert
-            Assert.Equal(1, 1);
-        }
 
         // TODO write test methods to ensure a correct coverage of all possibilities
 
         [Fact]
         public void CheckFieldValidationWithMissingName()
         {
-            // Arrange
+            // ARRANGE
             //we need to implement a new ProductService to be able to use the CheckProductModelErrors() method :
             //ProductService(ICart cart, IProductRepository productRepository, IOrderRepository orderRepository, IStringLocalizer stringLocalizer)
             // Mock all interfaces that are used in ProductService
@@ -41,25 +30,28 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             Mock<IProductRepository> mockProductRepository = new Mock<IProductRepository>();
             Mock<IOrderRepository> mockOrderRepository = new Mock<IOrderRepository>();
             Mock<IStringLocalizer<ProductService>> mockStringLocalizer = new Mock<IStringLocalizer<ProductService>>();
-            //Mock<IProductService> mockProductService = new Mock<IProductService>();
 
+            //Associate an error message value ("Please enter a name") to the ["MissingName"] annotation
             var errorName = new LocalizedString("MissingName", "Please enter a name");
             mockStringLocalizer.Setup(ml => ml["MissingName"]).Returns(errorName);
             ProductService productService = new ProductService(mockCart.Object, mockProductRepository.Object, mockOrderRepository.Object, mockStringLocalizer.Object);
+            //create a new product with no name
             ProductViewModel product = new ProductViewModel
             {
                 Id = 1,
                 Stock = "1",
-                Price = "1",
+                Price = "10",
                 Name = null,
-                Description = "x",
-                Details = "y"
+                Description = "a product",
+                Details = "details of the product"
             };
 
-            // Act
+            // ACT
+            //call the CheckProductModelErrors() method from ProductService to control fields validation and save the potential errors into the list
             var modelErrors = productService.CheckProductModelErrors(product);
 
-            // Assert
+            // ASSERT
+            //control that the list of errors was updated with the right error message
             Assert.Contains("Please enter a name", modelErrors);
         }
 
@@ -79,11 +71,11 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             ProductViewModel product = new ProductViewModel
             {
                 Id = 1,
-                Stock = "1",
+                Stock = "12",
                 Price = null,
-                Name = "z",
-                Description = "x",
-                Details = "y"
+                Name = "name of the product",
+                Description = "another product",
+                Details = "details from that product"
             };
 
             // Act
@@ -109,11 +101,11 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             ProductViewModel product = new ProductViewModel
             {
                 Id = 1,
-                Stock = "1",
+                Stock = "3",
                 Price = "a",
-                Name = "z",
-                Description = "x",
-                Details = "y"
+                Name = "product name",
+                Description = "this is a new product",
+                Details = "the product's details"
             };
 
             // Act
@@ -139,11 +131,11 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             ProductViewModel product = new ProductViewModel
             {
                 Id = 1,
-                Stock = "1",
+                Stock = "8",
                 Price = "-1",
-                Name = "z",
-                Description = "x",
-                Details = "y"
+                Name = "product",
+                Description = "a great product",
+                Details = "a product with options"
             };
 
             // Act
@@ -170,10 +162,10 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             {
                 Id = 1,
                 Stock = null,
-                Price = "1",
-                Name = "z",
-                Description = "x",
-                Details = "y"
+                Price = "12",
+                Name = "product2",
+                Description = "description ot product2",
+                Details = "details of product2"
             };
 
             // Act
@@ -200,10 +192,10 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             {
                 Id = 1,
                 Stock = "1.2",
-                Price = "1",
-                Name = "z",
-                Description = "x",
-                Details = "y"
+                Price = "5",
+                Name = "product3",
+                Description = "description of product3",
+                Details = "lots of details from product3"
             };
 
             // Act
@@ -230,10 +222,10 @@ namespace P3AddNewFunctionalityDotNetCore.Tests
             {
                 Id = 1,
                 Stock = "-1",
-                Price = "1",
-                Name = "z",
-                Description = "x",
-                Details = "y"
+                Price = "8",
+                Name = "the product name",
+                Description = "a full description",
+                Details = "more details on the product"
             };
 
             // Act
